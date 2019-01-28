@@ -14,10 +14,6 @@ import pandas as pd
 
 #will delete below comments in future, they will be currently used for reference:
 
-#
-
-
-#
 #test = stocknames.iloc[1]
 #print(test)
 
@@ -30,10 +26,6 @@ class Config:
         self.main = main
         self.db = wrds.Connection()
         data_set = self.db.get_table(library='crsp', table='stocknames')
-        # print(self.db.list_tables(library='crsp_a_stock'))
-        #print(self.db.list_libraries())
-        # data_set3 = self.db.describe_table(library='crisp', table='stocknames')
-        # print(data_set3)
         data_set2 = self.db.get_table(library='crsp_a_stock', table='msf')
         print(data_set2)
         #for data, value in data_set.iterrows():
