@@ -36,7 +36,7 @@ class Data:
     percent_of_shares_offered_abroad = None
     auditor = None
 
-    def data(self, data_type, data_id, cusip, date, issuer, sic, permno, permco, shrcd, prc, ret, shrout):
+    def data_crsp(self, data_type, data_id, cusip, date, issuer, sic, permno, permco, shrcd, prc, ret, shrout):
         self.data_type = data_type
         self.data_id = data_id
         self.cusip = cusip
@@ -50,7 +50,7 @@ class Data:
         self.ret = ret
         self.shrout = shrout
 
-    def data(self, data_type, data_id, cusip, date, issuer, sic, offer_price, ipo_flag, cusip9, sdc_id, deal_number, total_shares_offered_in_this_market, primary_shares_offered_in_this_market, total_revenues_before_offering, date_founded, lead_managers_long_name, venture_backed, original_high_filing_price, origional_low_filing_price, units, add_l_class_of_common_stock, percent_of_shares_offered_abroad, auditor):
+    def data_sdc(self, data_type, data_id, cusip, date, issuer, sic, offer_price, ipo_flag, cusip9, sdc_id, deal_number, total_shares_offered_in_this_market, primary_shares_offered_in_this_market, total_revenues_before_offering, date_founded, lead_managers_long_name, venture_backed, original_high_filing_price, origional_low_filing_price, units, add_l_class_of_common_stock, percent_of_shares_offered_abroad, auditor):
         self.data_type = data_type
         self.data_id = data_id
         self.cusip = cusip

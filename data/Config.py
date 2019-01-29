@@ -1,33 +1,51 @@
-import wrds
 from data.Data import Data
 from data.Database import Database
-import pandas as pd
-
-
-#sdc -- ['_malookup_', 'chars', 'ma_advisors', 'ma_details', 'ma_events', 'ma_names', 'names', 'ni_details', 'ni_names']
-
-#commands:
-#db.list_libraries()
-#db.list_tables(library='library name')
-#db.describe_table(library='library name', table='table name')
-#database_variable = db.get_table(library='library name', table='table name') # the type returned is DataFrame
-
-
-#will delete below comments in future, they will be currently used for reference:
-
-#test = stocknames.iloc[1]
-#print(test)
+import os
 
 class Config:
     #build all of the objects
     db = None
     main = None
 
-    def config(self, main):
+    #lists
+    databases = []
 
-        #for data, value in data_set.iterrows():
-            #print("crsp", data, value["cusip"], value["namedt"], value["comnam"], value["siccd"], value["permno"], value["permco"], value["shrcd"], value["prc"], value["ret"], value["shrout"]) #prc, ret, shrout
-            #data = Data()
-            #order fo items data.data(data_type, data_id, cusip, date, issuer, sic, permno, permco, shrcd, prc, ret, shrout)
-            #main.data.append(data.data("crsp", data, value["cusip"], value["date"], value["issuer"], value["sic"], value["permno"], value["permco"], value["shrcd"], value["prc"], value["ret"], value["shrout"]))
-            #data.print_data()
+    def file_split(self, file):
+        lines_per_file = 60000
+        smallfile = None
+        x = 0;
+        small_databases_names = []
+        with open(file) as bigfile:
+            for lineno, line in enumerate(bigfile):
+                if lineno % lines_per_file == 0:
+                    if smallfile:
+                        smallfile.close()
+                    small_filename = file.split(".")[0] + '{}.txt'.format(x)
+                    small_databases_names.append(small_filename)
+                    x += 1
+                    smallfile = open(small_filename, "w")
+                smallfile.write(line)
+            if smallfile:
+                smallfile.close()
+            return small_databases_names
+
+    def config(self, main):
+        self.main
+        for name in main.databases_names:
+            database = Database()
+            if(os.path.getsize(name) > 10000000):
+                small_databases_names = self.file_split(name)
+                titles = database.database_get_titles(small_databases_names)
+                for small_name in small_databases_names:
+                    new_database = Database()
+                    new_database.database_txt(self.main, small_name, titles)
+                    os.remove(small_name)
+                    self.databases.append(new_database)
+            elif(name.split(".")[-1] == "txt"):
+                database.database_txt(self.main, name)
+            elif(name.split(".")[-1] == "xls"):
+                database.database_xls(self.main, name)
+            else:
+                print("functionality not available yet")
+            if(database.title != None):
+                self.databases.append(database)
