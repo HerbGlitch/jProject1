@@ -1,5 +1,6 @@
 import wrds
 from data.Data import Data
+from data.Database import Database
 import pandas as pd
 
 
@@ -23,11 +24,7 @@ class Config:
     main = None
 
     def config(self, main):
-        self.main = main
-        self.db = wrds.Connection()
-        data_set = self.db.get_table(library='crsp', table='stocknames')
-        data_set2 = self.db.get_table(library='crsp_a_stock', table='msf')
-        print(data_set2)
+
         #for data, value in data_set.iterrows():
             #print("crsp", data, value["cusip"], value["namedt"], value["comnam"], value["siccd"], value["permno"], value["permco"], value["shrcd"], value["prc"], value["ret"], value["shrout"]) #prc, ret, shrout
             #data = Data()
