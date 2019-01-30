@@ -18,6 +18,11 @@ class Database:
         for line in lines[1:]:
             tempfile.write(line)
         tempfile.close()
+        i = 0
+        while i < len(titles):
+            if(titles[i].find("\n")):
+                titles[i] = titles[i].replace("\n", "")
+            i += 1
         self.table = pd.read_fwf("temp.txt", header=None, names=titles)
         os.remove("temp.txt")
         self.title = txt_file

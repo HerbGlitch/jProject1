@@ -1,5 +1,6 @@
 from data.Config import Config
 from data.Load_data import Load_data
+from data.Data import Data
 import os
 
 class Main():
@@ -9,9 +10,7 @@ class Main():
     #creates all class objects
     config = Config()
     load_data = Load_data()
-
-    #data holds all of data objects
-    data = []
+    data = Data()
 
     #array for all databases
     databases_names = []
@@ -22,7 +21,9 @@ class Main():
     def main(self, main):
         self.main = main
         main.config.config(self.main)
-        main.load_data.load_data(self.main, self.config)
+        main.data.data(self.config)
+        #main.load_data.load_data(self.main, self.config)
+        main.data.match("permno", "permno", "CRSP Total0.txt", "final.xls")
 
 def instantiate():
     main = Main()

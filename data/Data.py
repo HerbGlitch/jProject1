@@ -1,92 +1,45 @@
+import pandas as pd
+
 class Data:
-    #type variable
-    data_type = None
+    config = None
 
-    #same data variables
-    data_id = None
-    cusip = None
-    date = None
-    issuer = None
-    sic = None
+    def data(self, config):
+        self.config = config
 
-    #crsp
-    permno = None
-    permco = None
-    shrcd = None
-    prc = None
-    ret = None
-    shrout = None
+    def match(self, keyword_for_data1, keyword_for_data2, data_table1_name, data_table2_name):
+        data_table1 = None
+        data_table2 = None
+        for table in self.config.databases:
+            if(table.title == "databases/" + data_table1_name):
+                data_table1 = table
+            if(table.title == "databases/" + data_table2_name):
+                data_table2 = table
+        file = open("test.txt", "w+")
+        for id1, data1 in data_table1.table.iterrows():
+            for id2, data2, in data_table2.table.iterrows():
+                if(int(data1[keyword_for_data1]) == int(data2[keyword_for_data2])):
+                    if(self.match_month(data1["date"], data2["date"])):
+                        text = data_table1_name + " and " + data_table2_name + " have the same value at: Data1 - " + str(id1) + ", Data2 - " + str(id2) + "; with the value of: " + str(data1[keyword_for_data1] + " and dates of: Data1 - " + str(data1["date"]) + ", Data2 - " + str(data2["date"]) + "\n")
+                        file.write(text)
+        # file.write("\n" + data_table1.table.loc[32441]['date'])
+        file.close()
 
-    #sdc
-    offer_price = None
-    ipo_flag = None
-    cusip9 = None
-    sdc_id = None
-    deal_number = None
-    total_shares_offered_in_this_market = None
-    primary_shares_offered_in_this_market = None
-    total_revenues_before_offering = None
-    date_founded = None
-    lead_managers_long_name = None
-    venture_backed = None
-    original_high_filing_price = None
-    origional_low_filing_price = None
-    units = None
-    add_l_class_of_common_stock = None
-    percent_of_shares_offered_abroad = None
-    auditor = None
+    def match_month(self, date1, date2):
+        date1 = self.check_convert_date(date1)
+        date2 = self.check_convert_date(date2)
+        if(int(str(date1)[:6]) == int(str(date2)[:6])):
+            return True
 
-    def data_crsp(self, data_type, data_id, cusip, date, issuer, sic, permno, permco, shrcd, prc, ret, shrout):
-        self.data_type = data_type
-        self.data_id = data_id
-        self.cusip = cusip
-        self.date = date
-        self.issuer = issuer
-        self.sic = sic
-        self.permno = permno
-        self.permco = permco
-        self.shrcd = shrcd
-        self.prc = prc
-        self.ret = ret
-        self.shrout = shrout
-
-    def data_sdc(self, data_type, data_id, cusip, date, issuer, sic, offer_price, ipo_flag, cusip9, sdc_id, deal_number, total_shares_offered_in_this_market, primary_shares_offered_in_this_market, total_revenues_before_offering, date_founded, lead_managers_long_name, venture_backed, original_high_filing_price, origional_low_filing_price, units, add_l_class_of_common_stock, percent_of_shares_offered_abroad, auditor):
-        self.data_type = data_type
-        self.data_id = data_id
-        self.cusip = cusip
-        self.date = date
-        self.issuer = issuer
-        self.sic = sic
-        self.offer_price = None
-        self.ipo_flag = ipo_flag
-        self.cusip9 = cusip9
-        self.sdc_id = sdc_id
-        self.deal_number = deal_number
-        self.total_shares_offered_in_this_market = total_shares_offered_in_this_market
-        self.primary_shares_offered_in_this_market = primary_shares_offered_in_this_market
-        self.total_revenues_before_offering = total_revenues_before_offering
-        self.date_founded = date_founded
-        self.lead_managers_long_name = lead_managers_long_name
-        self.venture_backed = venture_backed
-        self.original_high_filing_price = original_high_filing_price
-        self.origional_low_filing_price = origional_low_filing_price
-        self.units = units
-        self.add_l_class_of_common_stock = add_l_class_of_common_stock
-        self.percent_of_shares_offered_abroad = percent_of_shares_offered_abroad
-        self.auditor = auditor
-
-    def print_data(self):
-        print("----------------------------------")
-        print(self.data_type)
-        print(self.data_id)
-        print(self.cusip)
-        print(self.date)
-        print(self.issuer)
-        print(self.sic)
-        if(self.data_type == "crsp"):
-            print(self.permno)
-            print(self.permco)
-            print(self.shrcd)
-            print(self.prc)
-            print(self.ret)
-            print(self.shrout)
+    def check_convert_date(self, date):
+        date = str(date).strip()
+        if("/" in date):
+            temp_date = date.split("/")
+            if(len(temp_date[0]) == 1):
+                temp_date = int("0" + str(temp_date[0]))
+            date = int(str(temp_date[2]) + str(temp_date[0]) + str(temp_date[1]))
+            return date
+        elif(len(date) == 8):
+            return int(date)
+        else:
+            print("error")
+            return 00000000
