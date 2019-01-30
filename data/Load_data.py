@@ -19,9 +19,7 @@ class Load_data:
 
     def load_table(self, database):
         if(database.title == self.crsp_name[0]):
-            print(database.table["cusip"])
-        #print("crsp", data, value["cusip"], value["namedt"], value["comnam"], value["siccd"], value["permno"], value["permco"], value["shrcd"], value["prc"], value["ret"], value["shrout"]) #prc, ret, shrout
-            #     data = Data()
-            #     order for items data.data(data_type, data_id, cusip, date, issuer, sic, permno, permco, shrcd, prc, ret, shrout)
-            #     main.data.append(data.data("crsp", data, value["cusip"], value["date"], value["issuer"], value["sic"], value["permno"], value["permco"], value["shrcd"], value["prc"], value["ret"], value["shrout"]))
-            #     data.print_data()
+            for id, data in database.table.iterrows():
+                data_object = Data()
+                main.data_object.data_crsp("crsp", id, data["cusip"], data["date"], data["comnam"], data["siccd"], data["permno"], data["permco"], data["shrcd"], data["prc"], data["ret"], data["shrout\n"])
+                data_object.print_data()
