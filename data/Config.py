@@ -30,11 +30,12 @@ class Config:
             return small_databases_names
 
     def config(self, main):
-        self.main
-        for name in main.databases_names:
+        self.main = main
+        for name in self.main.databases_names:
             database = Database()
             if(os.path.getsize(name) > 10000000):
                 small_databases_names = self.file_split(name)
+                self.main.small_databases_names.append(small_databases_names[-1])
                 titles = database.database_get_titles(small_databases_names)
                 for small_name in small_databases_names:
                     new_database = Database()
@@ -45,6 +46,8 @@ class Config:
                 database.database_txt(self.main, name)
             elif(name.split(".")[-1] == "xls"):
                 database.database_xls(self.main, name)
+            elif(name.split(".")[-1] == "wrds"):
+                database.database_wrds(self.main, name)
             else:
                 print("functionality not available yet")
             if(database.title != None):

@@ -4,9 +4,11 @@ import os
 
 class Database:
     title = None
-    db = None
+    database = None
     table = None
     main = None
+    library = None
+    table = None
 
     def database_txt(self, main, txt_file, titles = None):
         file = open(txt_file, 'r')
@@ -27,11 +29,15 @@ class Database:
         os.remove("temp.txt")
         self.title = txt_file
 
-    def database_wrds(self, main, library, table):
+    def database_wrds(self, main, wrds_file):
+        file = open(wrds_file, 'r')
+        lines = file.read().splitlines(True)
+        file.close()
+        self.library = lines[0].split("=")[1].strip()
+        self.table = lines[1].split("=")[1].strip()
         self.main = main
-        self.db = wrds.Connection()
-        self.table = self.db.get_table(library=library, table=table)
-        self.title = table + " in " + library
+        self.database = wrds.Connection(wrds_username="jbrau")
+        self.title = wrds_file
 
     def database_xls(self, main, xls_file):
         self.main = main
