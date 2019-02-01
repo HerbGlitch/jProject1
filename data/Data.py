@@ -24,7 +24,7 @@ class Data:
                 new_table = data_table1.database.raw_sql("SELECT * FROM "+data_table1.library+"."+data_table1.table+" WHERE (date >= '"+str(data["date"]).strip().split(" ")[0]+"') AND ("+keyword_for_data1+" IN ("+str(data[keyword_for_data2]).strip()+"))")
                 for id1, data1 in new_table.iterrows():
                     #saves matching data to text file
-                    text = "databases/" + wrds_data_table_name + "," + str(id) + "," + "databases/" + data_table_name + "," + str(id1) + "\n"
+                    text = "databases/" + wrds_data_table_name + "," + str(id) + "," + str(data1["date"]) + "," + str(data1["prc"]) +"," + "databases/" + data_table_name + "," + str(id1) + "," + str(data["date"]).split(" ")[0] + "," + str(data["prc"]) +"\n"
                     file.write(text)
         file.close()
 

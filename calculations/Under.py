@@ -5,21 +5,21 @@ import math
 class Under:
     config = None
     data = None
-    def under(self, config, data):
+    def wrds_and_xml_or_txt_under(self, config, data):
         self.config = config
         self.data = data
         data_table = open(".matchesbypermno", "r")
-        data_lines = data_table.readlines()
-        table = []
-        for data_items in data_lines:
+        table = data_table.readlines()
+        j = 0
+        for data_items in table:
             data = data_items.split(",")
             i = 0
             while i < len(data):
                 if(data[i].find("\n")):
                     data[i] = data[i].replace("\n", "")
                 i += 1
-            inner_table = [data[0], data[1], data[2], data[3]]
-            table.append(inner_table)
+            table[j] = data
+            j += 1
         file = open(".test", "w+")
         up = .0001
         for inner_table in table:
@@ -28,14 +28,16 @@ class Under:
             for fetch_table in self.config.databases:
                 if(fetch_table.title == inner_table[0]):
                     data_table1 = fetch_table
-                if(fetch_table.title == inner_table[2]):
+                if(fetch_table.title == inner_table[4]):
                     data_table2 = fetch_table
-            if(self.data.match_month(data_table1.table.loc[int(inner_table[1])]["date"], data_table2.table.loc[int(inner_table[3])]["date"])):
-                prc = data_table1.table.loc[int(inner_table[1])]["prc"]
-                offer_prc = data_table2.table.loc[int(inner_table[3])]["prc"]
+            if(self.data.match_month(inner_table[2], inner_table[6])):
+                prc = inner_table[3]
+                offer_prc = inner_table[7]
                 if(self.data.check_float(str(prc)) and self.data.check_float(str(offer_prc))):
-                    print(prc,offer_prc)
                     up = (math.fabs(float(prc))/float(offer_prc)) - 1
-                    file.write(data_table1.title + "," + inner_table[1] + "," + data_table2.title + "," + inner_table[2] + "," + str(up) + "\n")
+                    try:
+                        file.write(str(data_table2.table.loc[int(inner_table[5])]["permno"]) + "," + data_table1.title + "," + inner_table[1] + "," + data_table2.title + "," + inner_table[5] + "," + str(up) + "," + data_table2.table.loc[int(inner_table[5])]["issuer"] + "\n")
+                    except:
+                        print("hi")
         file.close()
             # file.write("\n" + data_table1.table.loc[32441]['date'])
