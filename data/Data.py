@@ -7,34 +7,26 @@ class Data:
         #allowes config.databases to be called
         self.config = config
 
-    def match_by_permno_and_date(self, keyword_for_data1, keyword_for_data2, data_table1_name, data_table2_name):
+    def match_by_permno_and_date_wrds_and_xls_or_txt(self, keyword_for_data1, keyword_for_data2, wrds_data_table_name, data_table_name):
         #gets the tables from the databases in config to check permno and date
         data_table1 = None
         data_table2 = None
         for table in self.config.databases:
-            if(table.title == "databases/" + data_table1_name):
-                print(data_table1, table)
+            if(table.title == "databases/" + wrds_data_table_name):
                 data_table1 = table
-            if(table.title == "databases/" + data_table2_name):
+            if(table.title == "databases/" + data_table_name):
                 data_table2 = table
-        #creates a file to write final data to make looping through every run not necessary
-        #file = open(".matchesbypermno", "w+")
         #loops throught the table
-        test = data_table1.database.raw_sql("SELECT "+data_table1.library+";")
-        test = data_table1.database.raw_sql("SELECT "+keyword_for_data1+" FROM "+data_table1.table+" WHERE FIND_IN_SET('10240', "+keyword_for_data1+");")
-        # for id1, data1 in data_table1.table.iterrows():
-        #     for id2, data2, in data_table2.table.iterrows():
-        #         #check to see if the data is an integer
-        #         if(self.check_int(str(data1[keyword_for_data1])) and self.check_int(str(data2[keyword_for_data2]))):
-        #             #strips data of whitespace and compares permno
-        #             if(int(str(data1[keyword_for_data1]).strip()) == int(str(data2[keyword_for_data2]).strip())):
-        #                 #checks date to see after the company was created
-        #                 if(self.check_recent_date(data1["date"], data2["date"])):
-        #                     #writes to file making mutiple looping not needed to save time
-        #                     text = "databases/" + data_table1_name + "," + str(id1) + "," + "databases/" + data_table2_name + "," + str(id2) + "\n"
-        #                     file.write(text)
-        #saves the file
-        #file.close()
+        file = open(".matchesbypermno", "w+")
+        for id, data in data_table2.table.iterrows():
+            if(self.check_int(str(data[keyword_for_data2]))):
+                #checks permno and date
+                new_table = data_table1.database.raw_sql("SELECT * FROM "+data_table1.library+"."+data_table1.table+" WHERE (date >= '"+str(data["date"]).strip().split(" ")[0]+"') AND ("+keyword_for_data1+" IN ("+str(data[keyword_for_data2]).strip()+"))")
+                for id1, data1 in new_table.iterrows():
+                    #saves matching data to text file
+                    text = "databases/" + wrds_data_table_name + "," + str(id) + "," + "databases/" + data_table_name + "," + str(id1) + "\n"
+                    file.write(text)
+        file.close()
 
     def match_month(self, date1, date2):
         #checks if the months and years are the same
